@@ -1,0 +1,135 @@
+---
+title: "Best Netflix Movies and Shows"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+#Importing libraries
+library(flexdashboard)
+library(tidyverse)
+library(highcharter)
+library(gt)
+library(ggplot2)
+library(ggrepel)
+```
+
+
+```{r}
+#Importing data
+
+netflix <- read_csv("C://Users//Asus//OneDrive//Desktop//Programming language//R lang//Best Movies and Shows Netflix.csv", show_col_types = FALSE)
+
+
+```
+
+Netflix
+=======================================================================
+
+Column {data-width=250}
+-----------------------------------------------------------------------
+
+### Most Popular Movies by Year
+
+```{r}
+# Load the necessary libraries
+library(ggplot2)
+library(ggrepel)
+
+# Create a data frame with the best movie for each year
+best_movies <- data.frame(
+  YEAR = c(2020, 2010, 2003, 2021, 1998, 2012, 2016, 2019, 2004, 2015),
+  TITLE = c("David Attenborough: A Life on Our Planet", "Inception", "Anbe Sivam", "Bo Burnham: Inside", "Saving Private Ryan", "Django Unchained", "Dangal", "Dave Chappelle: Sticks & Stones", "Black Friday", "Winter on Fire: Ukraine's Fight for Freedom"),
+  SCORE = c(9, 8.8, 8.7, 8.7, 8.6, 8.4, 8.4, 8.4, 8.4, 8.3),
+  MAIN_GENRE = c("Documentary", "Sci-Fi", "Comedy", "Comedy", "Drama", "Western", "Action", "Comedy", "Crime", "Documentary")
+)
+
+# Create the chart
+ggplot(best_movies, aes(x = YEAR, y = SCORE, label = TITLE, color = MAIN_GENRE)) +
+  geom_point(size = 3) +
+  geom_text_repel(size = 3, segment.color = "black") +
+  labs(title = "Best Movies by Year",
+       x = "Year",
+       y = "IMDb Score",
+       color = "Main Genre") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_manual(values = c("Documentary" = "blue", "Sci-Fi" = "green", "Comedy" = "orange", "Drama" = "red", "Western" = "purple", "Action" = "yellow", "Crime" = "brown"))
+
+
+
+```
+
+Column {data-width=250 }
+-----------------------------------------------------------------------
+
+### Most Popular Shows and Movie by Scores
+
+```{r}
+# Load the necessary libraries
+library(ggplot2)
+
+# Data
+shows <- data.frame(
+  TITLE = c("Breaking Bad", "Avatar: The Last Airbender", "Our Planet", "Kota Factory", "The Last Dance", "Arcane", "Attack on Titan", "Hunter x Hunter", "DEATH NOTE", "Seinfeld"),
+  SCORE = c(9.5, 9.3, 9.3, 9.3, 9.1, 9.1, 9, 9, 9, 8.9),
+  stringsAsFactors = FALSE
+)
+
+# Sort the data by SCORE in descending order
+shows <- shows[order(-shows$SCORE), ]
+
+# Create the chart
+ggplot(shows, aes(x = reorder(TITLE, SCORE), y = SCORE)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Top Shows and Movies by Score",
+       x = "Show Title",
+       y = "IMDb Score") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+Column {data-width=250}
+-----------------------------------------------------------------------
+
+### Top 10 Best Shows and Movies
+```{r}
+
+# Extracting the top 10 best shows based on score
+netflix <- head(netflix[order(-netflix$SCORE), ], 10)
+
+# Creating a pie chart for the top 10 best shows
+pie(netflix$SCORE, labels = netflix$TITLE, main = "Top 10 Best Shows and Movies")
+
+```
+
+# Movies
+## Movies Dataset
+
+### Table of Movies
+```{r}
+library(flexdashboard)
+library(DT)
+
+netflixMovies <- read_csv("C://Users//Asus//OneDrive//Desktop//Programming language//R lang//netflix movies.csv")
+
+datatable(netflixMovies)
+```
+# Shows
+## Shows Dataset
+
+### Table of Shows
+
+```{r}
+library(flexdashboard)
+library(DT)
+
+netflixShows <- read_csv("C://Users//Asus//OneDrive//Desktop//Programming language//R lang//netflix shows.csv")
+
+datatable(netflixShows)
+```
+
